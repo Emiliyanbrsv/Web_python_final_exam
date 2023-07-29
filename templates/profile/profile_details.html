@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    {% if request.user.profile_type == 'normal' %}
+        <p>{{ profile.first_name }}</p>
+        <p>{{ profile.last_name }}</p>
+        <p>{{ profile.date_of_birth }}</p>
+        <p>{{ profile.gender }}</p>
+
+        {% if profile.profile_image %}
+            <p><img src="{{ profile.profile_image.url }}" alt="{{ profile.first_name }}"></p>
+        {% endif %}
+
+    {% else %}
+        <p>{{ organizer.name }}</p>
+        <p>{{ organizer.description }}</p>
+        <p>{{ organizer.phone_number }}</p>
+        <p>{{ organizer.website }}</p>
+    {% endif %}
+
+
+    <a href="{% url 'profile_edit' object.pk %}">Edit Profile</a>
+    <a href="{% url 'profile_delete' object.pk %}">Delete Profile</a>
+
+{% endblock %}

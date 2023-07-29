@@ -1,0 +1,11 @@
+<form method="post" action="{% url 'profile_delete' object.pk %}">
+
+
+    <p>Are you sure you want to delete "{{ profile.first_name }}"?</p>
+
+     <button type="submit">Delete</button>
+
+    {% csrf_token %}
+
+    <a href="{% url 'locations' %}" >Return to EMS</a>
+</form>

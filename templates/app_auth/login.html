@@ -1,0 +1,44 @@
+{#{% extends 'base.html' %}#}
+{#{% block content %}#}
+{#    {% load static %}#}
+{##}
+{#    {{ request.user }}#}
+{#    <form action="{% url 'login_user' %}" method="post">#}
+{##}
+{#        {{ form }}#}
+{##}
+{#        <div>#}
+{#            <button>Login</button>#}
+{#            or#}
+{#            <a href="{% url 'register_user' %}">Register</a>#}
+{#        </div>#}
+{#        {% csrf_token %}#}
+{#    </form>#}
+{##}
+{#{% endblock %}#}
+{% extends 'base.html' %}
+{% block content %}
+
+    <div id="body">
+        <form class="login-form" action="{% url 'login_user' %}" method="post">
+
+            {{ form.as_p }}
+            {% csrf_token %}
+
+            <button class="login-button" type="submit">Login</button>
+
+            <div class="login-link">
+                <p>or</p>
+                <a href="{% url 'register_user' %}">Register</a>
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Event Management System{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+</head>
+<body>
+{#<header>#}
+{#    <!-- Navigation bar -->#}
+{#    <nav>#}
+{#        <!-- Include links to different pages -->#}
+{#        <a href="/">Home</a>#}
+{#        <a href="{% url 'locations' %}">Events</a>#}
+{##}
+{#        {% if request.user.is_authenticated %}#}
+{#            <a href="#">Dashboard</a>#}
+{#            <a href="{% url 'profile_details' user.pk %}">Profile</a>#}
+{#            <a href="{% url 'logout_user' %}">Logout</a>#}
+{#        {% else %}#}
+{#            <a href="{% url 'login_user' %}">Login</a>#}
+{#        {% endif %}#}
+{#        <!-- Add more navigation links as needed -->#}
+{#    </nav>#}
+{#</header>#}
+<div id="header">
+    <div>
+        <a href="{% url 'locations' %}" id="logo"><img src="{% static 'images/emo (4).png' %}" alt="logo"></a>
+        <ul>
+            <li class="selected">
+                <a href="{% url 'locations' %}">Events</a>#}
+            </li>
+            <li>
+                <a href="#">Subdivisions</a>
+            </li>
+            <li>
+                <a href="#">Blog</a>
+            </li>
+            <li>
+                <a href="#">About</a>
+            </li>
+            {% if request.user.is_authenticated %}
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+                <li>
+                    <a href="{% url 'profile_details' user.pk %}">Profile</a>
+                </li>
+                <li>
+                    <a href="{% url 'logout_user' %}">Logout</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'login_user' %}">Login</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+<main>
+
+    {{ request.user }}
+    {% block content %}
+    {% endblock %}
+</main>
+<footer>
+    <div id="footer">
+        <div>
+            <p>
+                &#169; 2023 Emiliyan Borisov. All Rights Reserved.
+            </p>
+            <div class="connect">
+                <a href="http://freewebsitetemplates.com/go/googleplus/" id="googleplus">google+</a>
+                <a href="http://www.freewebsitetemplates.com/misc/contact" id="contact">contact</a>
+                <a href="http://freewebsitetemplates.com/go/facebook/" id="facebook">facebook</a>
+                <a href="http://freewebsitetemplates.com/go/twitter/" id="twitter">twitter</a>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
