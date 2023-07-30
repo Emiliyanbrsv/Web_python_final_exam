@@ -1,17 +1,69 @@
 {% extends 'base.html' %}
 {% block content %}
 
-       <ul>
-        {% for event in object_list %}
-            <li>
-                <p>{{ event.name }}</p>
-                {% if event.image %}
-                    <p><img src="{{ event.image }}" alt="{{ event.name }}"></p>
-                {% endif %}
-            </li>
-        {% empty %}
-            <p>No Events</p>
-        {% endfor %}
-    </ul>
+    {#       <ul>#}
+    {#        {% for event in object_list %}#}
+    {#            <li>#}
+    {#                <p>{{ event.name }}</p>#}
+    {#                {% if event.image %}#}
+    {#                    <p><img src="{{ event.image }}" alt="{{ event.name }}"></p>#}
+    {#                {% endif %}#}
+    {#            </li>#}
+    {#        {% empty %}#}
+    {#            <p>No Events</p>#}
+    {#        {% endfor %}#}
+    {#    </ul>#}
 
+    <div id="body" class="blog">
+        <div>
+            <ul>
+                {% for event in object_list %}
+                    <li>
+                        {% if event.image %}
+                            <span class="bg-top"></span>
+                            <a href="{% url 'details event' event.slug %}">
+                                <div class="image-container">
+                                    <img src="{{ event.image.url }}" alt="{{ event.name }}">
+                                </div>
+                            </a>
+                        {% endif %}
+                        <div>
+                            <h3><a href="{% url 'details event' event.slug %}">{{ event.name }}</a></h3>
+                            <p>
+                                {{ event.description }}
+                            </p>
+                            <div>
+                                <span>{{ event.start_date_time }} by {{ event.organizer.name }}</span>
+
+                                {#                                {% for event_view in event.eventviews_set.all %}#}
+                                {#                                    <span>{{ event_view.views_count }} views</span>#}
+                                {#                                {% empty %}#}
+                                {#                                    <span>0 views</span>#}
+                                {#                                {% endfor %}#}
+                                <span>Total Views: {{ event.total_views }}</span>
+
+                            </div>
+                        </div>
+                        <span class="bg-bottom"></span> <span class="triangle"></span>
+                    </li>
+                {% empty %}
+                    <h1>No events in this city!</h1>
+                {% endfor %}
+            </ul>
+            {#            <ul class="paging">#}
+            {#                <li class="first">#}
+            {#                    <a href="#">First</a>#}
+            {#                </li>#}
+            {#                <li class="selected">#}
+            {#                    <a href="#">1</a>#}
+            {#                </li>#}
+            {#                <li>#}
+            {#                    <a href="#">2</a>#}
+            {#                </li>#}
+            {#                <li class="last">#}
+            {#                    <a href="#">Last</a>#}
+            {#                </li>#}
+            {#            </ul>#}
+        </div>
+    </div>
 {% endblock %}

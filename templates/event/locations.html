@@ -1,21 +1,44 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-    <ul>
-        {% for location in object_list %}
-            <li>
-                <a href="{% url 'location event' city_name=location.city_name %}">{{ location.city_name }}, {{ location.country }}</a>
-                <p>{{ location.description }}</p>
-                {% if location.image %}
-                    <p><img src="{{ location.image.url }}" alt="{{ location.city_name }}"></p>
-                {% endif %}
-            </li>
-        {% empty %}
-            <p>No Locations</p>
-        {% endfor %}
-    </ul>
+    {#    <ul>#}
+    {#        {% for location in object_list %}#}
+    {#            <li>#}
+    {#                <a href="{% url 'location event' city_name=location.city_name %}">{{ location.city_name }}, {{ location.country }}</a>#}
+    {#                <p>{{ location.description }}</p>#}
+    {#                {% if location.image %}#}
+    {#                    <p><img src="{{ location.image.url }}" alt="{{ location.city_name }}"></p>#}
+    {#                {% endif %}#}
+    {#            </li>#}
+    {#        {% empty %}#}
+    {#            <p>No Locations</p>#}
+    {#        {% endfor %}#}
+    {#    </ul>#}
+    {##}
+    {#    {% if request.user.profile_type == 'organizer' %}#}
+    {#    <a href="{% url 'create event' %}">Create Event</a>#}
+    {#    {% endif %}#}
 
-    {% if request.user.profile_type == 'organizer' %}
-    <a href="{% url 'create event' %}">Create Event</a>
-    {% endif %}
+
+    <div id="body" class="home">
+        {% for location in object_list %}
+
+            <div class="{% cycle 'article' 'news' %}">
+                <img src="{{ location.image.url }}" alt="#" class="cropped-image">
+                <h3>
+                    <a href="{% url 'location event' city_name=location.city_name %}">{{ location.city_name }}, {{ location.country }}</a>
+                </h3>
+
+                <p>
+                    {{ location.description }}
+                </p>
+
+                {#                <p>#}
+                {#                    You can replace all this text with your own text. You can remove <br> any link to our website from#}
+                {#                    this website template, you're free to <br> use this website template without linking back to us.#}
+                {#                </p>#}
+            </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}

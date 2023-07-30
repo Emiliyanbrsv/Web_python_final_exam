@@ -100,6 +100,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # TODO: fix reverse_lazy
 LOGIN_REDIRECT_URL = reverse_lazy('locations')
 
+LOGIN_URL = '/login/'
+
 LOGOUT_REDIRECT_URL = reverse_lazy('login_user')
 
 # LOGIN_URL = reverse_lazy('login_user')

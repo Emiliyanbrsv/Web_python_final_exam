@@ -31,19 +31,16 @@
             <li class="selected">
                 <a href="{% url 'locations' %}">Events</a>#}
             </li>
-            <li>
-                <a href="#">Subdivisions</a>
-            </li>
-            <li>
-                <a href="#">Blog</a>
-            </li>
-            <li>
-                <a href="#">About</a>
-            </li>
+
             {% if request.user.is_authenticated %}
                 <li>
                     <a href="#">Dashboard</a>
                 </li>
+                {% if request.user.profile_type == 'organizer' %}
+                    <li>
+                        <a href="{% url 'create event' %}">Add Event</a>
+                    </li>
+                {% endif %}
                 <li>
                     <a href="{% url 'profile_details' user.pk %}">Profile</a>
                 </li>
@@ -58,26 +55,26 @@
         </ul>
     </div>
 </div>
-<main>
+{#<main>#}
 
-    {{ request.user }}
-    {% block content %}
-    {% endblock %}
-</main>
-<footer>
-    <div id="footer">
-        <div>
-            <p>
-                &#169; 2023 Emiliyan Borisov. All Rights Reserved.
-            </p>
-            <div class="connect">
-                <a href="http://freewebsitetemplates.com/go/googleplus/" id="googleplus">google+</a>
-                <a href="http://www.freewebsitetemplates.com/misc/contact" id="contact">contact</a>
-                <a href="http://freewebsitetemplates.com/go/facebook/" id="facebook">facebook</a>
-                <a href="http://freewebsitetemplates.com/go/twitter/" id="twitter">twitter</a>
-            </div>
+{{ request.user }}
+{% block content %}
+{% endblock %}
+{#</main>#}
+{#<footer>#}
+<div id="footer">
+    <div>
+        <p>
+            &#169; 2023 Emiliyan Borisov. All Rights Reserved.
+        </p>
+        <div class="connect">
+            <a href="http://freewebsitetemplates.com/go/googleplus/" id="googleplus">google+</a>
+            <a href="http://www.freewebsitetemplates.com/misc/contact" id="contact">contact</a>
+            <a href="http://freewebsitetemplates.com/go/facebook/" id="facebook">facebook</a>
+            <a href="http://freewebsitetemplates.com/go/twitter/" id="twitter">twitter</a>
         </div>
     </div>
-</footer>
+</div>
+{#</footer>#}
 </body>
 </html>

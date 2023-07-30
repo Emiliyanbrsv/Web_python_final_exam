@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+
 <form method="post" action="{% url 'profile_delete' object.pk %}">
 
 
@@ -9,3 +12,5 @@
 
     <a href="{% url 'locations' %}" >Return to EMS</a>
 </form>
+
+{% endblock %}

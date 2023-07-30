@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.contrib.auth.models import AnonymousUser
+from django.db.models import Sum
 from django.urls import reverse_lazy
 from django.views import generic as views
 
 from events_management.event.forms import EventCreateForm
-from events_management.event.models import Location, Event
+from events_management.event.models import Location, Event, EventViews
 
 
 # event_views
@@ -33,20 +35,57 @@ class EventCreateView(OrganizerRequiredMixin, views.CreateView):
         return super().form_valid(form)
 
 
+def get_total_views(event):
+    total_views = EventViews.objects.filter(event=event).aggregate(Sum('views_count'))['views_count__sum']
+    return total_views or 0
+
+
 class EventListView(views.ListView):
     model = Event
     template_name = 'event/event_list.html'
+    context_object_name = 'events'
 
     def get_queryset(self):
         city_name = self.kwargs.get('city_name')
         return Event.objects.filter(location__city_name=city_name)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        events = context['events']
+        for event in events:
+            event.total_views = get_total_views(event)
+
+        return context
+
 
 class EventDetailsView(views.DetailView):
-    pass
+    model = Event
+    template_name = 'event/event_detail.html'
+    context_object_name = 'event'
+
+    def get_object(self, queryset=None):
+        event = super().get_object(queryset=queryset)
+
+        if not isinstance(self.request.user, AnonymousUser):
+            event_view, created = EventViews.objects.get_or_create(event=event, user=self.request.user)
+            if not created:
+                event_view.views_count += 1
+                event_view.save()
+
+        return event
 
 
 class EventDeleteView(views.DeleteView):
+    model = Event
+    success_url = reverse_lazy('locations')
+    template_name = 'event/event_delete.html'
+
+    def test_func(self):
+        event = self.get_object()
+        return self.request.user == event.organizer
+
+
+class EventEditView(views.UpdateView):
     model = Event
 
 

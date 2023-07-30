@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{{ event.name }}</h1>
+    <p>Start Date/Time: {{ event.start_date_time }}</p>
+    <p>End Date/Time: {{ event.end_date_time }}</p>
+    <p>Description: {{ event.description }}</p>
+
+    {% if event.image %}
+        <img src="{{ event.image.url }}" alt="{{ event.name }}">
+    {% endif %}
+
+    <p>Location: {{ event.location }}</p>
+    <p>Organizer: {{ event.organizer.name }}</p>
+
+{#    <p>Views: {{ event.eventviews.views_count }}</p>#}
+
+{#    <a href="{% url 'event_edit' event.pk %}">Edit Event</a>#}
+{#    <a href="{% url 'event_delete' event.pk %}">Delete Event</a>#}
+{% endblock %}

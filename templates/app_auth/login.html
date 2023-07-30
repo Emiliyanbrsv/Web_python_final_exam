@@ -23,7 +23,10 @@
         <form class="login-form" action="{% url 'login_user' %}" method="post">
 
             {{ form.as_p }}
+
+
             {% csrf_token %}
+            <input type="hidden" value="{{ next }}" name="next"/>
 
             <button class="login-button" type="submit">Login</button>
 

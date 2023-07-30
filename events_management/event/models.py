@@ -1,10 +1,14 @@
 from autoslug import AutoSlugField
+from autoslug.utils import slugify
+from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator
 from django.db import models
 
 from events_management.event.validators import check_if_date_is_past
 from events_management.event.validators import validate_file_less_than_5mb
 from events_management.user_profile.models import Organizer
+
+UserModel = get_user_model()
 
 
 # event model
@@ -116,12 +120,42 @@ class Event(models.Model):
         on_delete=models.CASCADE,
     )
 
-    #
-    # slug = AutoSlugField(
-    #     populate_from=lambda instance: f'{instance.location.city_name}-{instance.pk}',
-    #     unique=True,
-    #     editable=False,
-    # )
+    slug = models.SlugField(
+        unique=True,
+        editable=False,
+    )
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if not self.slug:
+            self.slug = slugify(f'{self.name}-{self.pk}')
+        return super().save(*args, **kwargs)
 
     class Meta:
         ordering = ('pk',)
+
+
+class EventViews(models.Model):
+
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        # related_name='eventviews',
+    )
+
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE
+    )
+
+    views_count = models.PositiveIntegerField(
+        default=0
+    )
+
+    # date_and_time_of_view = models.DateTimeField(
+    #     auto_now_add=True,
+    # )
+
+    def __str__(self):
+        return f"{self.user.username} viewed {self.event.name} ({self.views_count} views)"
