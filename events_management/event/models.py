@@ -137,7 +137,6 @@ class Event(models.Model):
 
 
 class EventViews(models.Model):
-
     event = models.ForeignKey(
         Event,
         on_delete=models.CASCADE,
@@ -159,3 +158,46 @@ class EventViews(models.Model):
 
     def __str__(self):
         return f"{self.user.username} viewed {self.event.name} ({self.views_count} views)"
+
+
+class EventRegistration(models.Model):
+
+    first_name = models.CharField(
+        max_length=30,
+        null=False,
+        blank=False,
+    )
+
+    last_name = models.CharField(
+        max_length=30,
+        null=False,
+        blank=False,
+    )
+
+    attendees = models.PositiveIntegerField(
+        default=1,
+        null=False,
+        blank=False,
+    )
+
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE
+    )
+
+    phone_number = models.IntegerField(
+        null=False,
+        blank=False,
+    )
+
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+    )
+
+    registration_date = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        ordering = ('pk',)

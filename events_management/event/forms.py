@@ -1,12 +1,11 @@
 from django import forms
 
-from events_management.event.models import Event
+from events_management.event.models import Event, EventRegistration
 
 
 class EventCreateForm(forms.ModelForm):
     class Meta:
         model = Event
-        # fields = '__all__'
         exclude = ['organizer']
 
         widgets = {
@@ -23,3 +22,9 @@ class EventCreateForm(forms.ModelForm):
                 },
             ),
         }
+
+
+class EventRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = EventRegistration
+        fields = ['first_name', 'last_name', 'attendees', 'phone_number']

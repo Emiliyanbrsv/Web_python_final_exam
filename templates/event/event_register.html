@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div id="body">
+        <form action="{% url 'register event' event.slug %}" method="post" class="registration-form">
+            {{ form.as_p }}
+            {% csrf_token %}
+
+            <button class="btn-register" type="submit">Register</button>
+
+        </form>
+    </div>
+
+{% endblock %}

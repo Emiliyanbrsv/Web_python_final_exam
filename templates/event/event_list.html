@@ -1,19 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    {#       <ul>#}
-    {#        {% for event in object_list %}#}
-    {#            <li>#}
-    {#                <p>{{ event.name }}</p>#}
-    {#                {% if event.image %}#}
-    {#                    <p><img src="{{ event.image }}" alt="{{ event.name }}"></p>#}
-    {#                {% endif %}#}
-    {#            </li>#}
-    {#        {% empty %}#}
-    {#            <p>No Events</p>#}
-    {#        {% endfor %}#}
-    {#    </ul>#}
-
     <div id="body" class="blog">
         <div>
             <ul>
@@ -35,11 +22,6 @@
                             <div>
                                 <span>{{ event.start_date_time }} by {{ event.organizer.name }}</span>
 
-                                {#                                {% for event_view in event.eventviews_set.all %}#}
-                                {#                                    <span>{{ event_view.views_count }} views</span>#}
-                                {#                                {% empty %}#}
-                                {#                                    <span>0 views</span>#}
-                                {#                                {% endfor %}#}
                                 <span>Total Views: {{ event.total_views }}</span>
 
                             </div>

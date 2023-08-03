@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div id="body" class="subdivisions">
+        <ul>
+            {% for event in object_list %}
+                <li>
+                    <div>
+                        <h3><a href="{% url 'details event' event.slug %}">{{ event.name }}</h3></a>
+                        <p>
+                            {{ event.description }}
+                        </p>
+                    </div>
+                    <a href="{% url 'details event' event.slug %}"><img src="{{ event.image.url }}" alt=""></a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

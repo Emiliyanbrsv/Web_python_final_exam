@@ -27,7 +27,7 @@ class ProfileDetailsView(LoginRequiredMixin, views.DetailView):
 
 class ProfileEditView(LoginRequiredMixin, views.UpdateView):
     template_name = 'profile/profile_edit.html'
-    success_url = reverse_lazy('login_user')
+    success_url = reverse_lazy('locations')
 
     def get_object(self, *args, **kwargs):
         user = self.request.user

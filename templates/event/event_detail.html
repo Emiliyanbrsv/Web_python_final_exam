@@ -12,8 +12,13 @@
     <p>Location: {{ event.location }}</p>
     <p>Organizer: {{ event.organizer.name }}</p>
 
-{#    <p>Views: {{ event.eventviews.views_count }}</p>#}
+    {% if request.user.profile_type == 'normal' %}
+        <button class='btn-register' type="button"><a href="{% url 'register event' event.slug %}">Register </a>
+        </button>
+    {% endif %}
 
-{#    <a href="{% url 'event_edit' event.pk %}">Edit Event</a>#}
-{#    <a href="{% url 'event_delete' event.pk %}">Delete Event</a>#}
+    {% if is_organizer %}
+        {#        <a href="{% url 'edit event' event.slug %}">Edit Event</a>#}
+        <a href="{% url 'delete event' event.slug %}">Delete Event</a>
+    {% endif %}
 {% endblock %}

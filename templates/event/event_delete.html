@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <form method="post" action="{% url 'delete event' object.pk %}">
+    <form method="post" action="{% url 'delete event' event.slug %}">
 
 
     <p>Are you sure you want to delete "{{ event.name }}"?</p>

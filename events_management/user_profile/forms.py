@@ -21,4 +21,4 @@ class NormalProfileEditForm(forms.ModelForm):
 class OrganizerProfileEditForm(forms.ModelForm):
     class Meta:
         model = Organizer
-        fields = '__all__'
+        exclude = ['user']

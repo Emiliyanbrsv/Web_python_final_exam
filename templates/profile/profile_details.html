@@ -19,7 +19,9 @@
     {% endif %}
 
 
-    <a href="{% url 'profile_edit' object.pk %}">Edit Profile</a>
-    <a href="{% url 'profile_delete' object.pk %}">Delete Profile</a>
+    <button class='btn-register' type="button"><a href="{% url 'profile_edit' object.pk %}">Edit Profile</a></button>
+    <button class='btn-register' type="button"><a href="{% url 'profile_delete' object.pk %}">Delete Profile</a>
+    </button>
+
 
 {% endblock %}
