@@ -1,7 +1,7 @@
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth import views as auth_views
+from django.shortcuts import render, redirect
 
-from django.urls import reverse_lazy, reverse
 from django.views import generic as views
 
 from events_management.app_auth.forms import RegisterUserForm
@@ -10,21 +10,41 @@ from events_management.app_auth.forms import RegisterUserForm
 UserModel = get_user_model()
 
 
-class RegisterUserView(views.CreateView):
+class RegisterUserView(views.View):
     form_class = RegisterUserForm
     template_name = 'app_auth/register.html'
 
-    success_url = reverse_lazy('locations')
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
 
-    def form_valid(self, form):
-        result = super().form_valid(form)
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            # Set any additional fields as needed
+            user.save()
 
-        login(self.request, self.object)
+            # Log in the user
+            login(request, user)
 
-        return result
+            # Redirect to the profile details page with the user's pk
+            return redirect('profile_edit', pk=user.pk)
 
+        return render(request, self.template_name, {'form': form})
+
+    # success_url = reverse_lazy('locations')
+
+    # def form_valid(self, form):
+    #     result = super().form_valid(form)
+    #
+    #     login(self.request, self.object)
+    #
+    #     return result
+    #
     # def get_success_url(self):
-    #     return reverse('profile_details', kwargs={'pk': self.request.user.pk})
+    #     pk = self.request.user.pk
+    #     return reverse('profile_details', kwargs={'pk': pk})
 
 
 class LoginUserView(auth_views.LoginView):

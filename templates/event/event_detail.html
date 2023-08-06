@@ -1,24 +1,62 @@
+{#{% extends 'base.html' %}#}
+{#{% block content %}#}
+{#    <h1>{{ event.name }}</h1>#}
+{#    <p>Start Date/Time: {{ event.start_date_time }}</p>#}
+{#    <p>End Date/Time: {{ event.end_date_time }}</p>#}
+{#    <p>Description: {{ event.description }}</p>#}
+{##}
+{#    {% if event.image %}#}
+{#        <img src="{{ event.image.url }}" alt="{{ event.name }}">#}
+{#    {% endif %}#}
+{##}
+{#    <p>Location: {{ event.location }}</p>#}
+{#    <p>Organizer: {{ event.organizer.name }}</p>#}
+{##}
+{#    {% if request.user.profile_type == 'normal' %}#}
+{#        <button class='btn-register' type="button"><a href="{% url 'register event' event.slug %}">Register </a>#}
+{#        </button>#}
+{#    {% endif %}#}
+{##}
+{#    {% if is_organizer %}#}
+{#        <button class='btn-register' type="button"><a href="{% url 'edit event' event.slug %}">Edit Event</a></button>#}
+{#        <button class='btn-register' type="button"><a href="{% url 'delete event' event.slug %}">Delete Event</a>#}
+{#        </button>#}
+{#    {% endif %}#}
+{#{% endblock %}#}
+
 {% extends 'base.html' %}
 {% block content %}
-    <h1>{{ event.name }}</h1>
-    <p>Start Date/Time: {{ event.start_date_time }}</p>
-    <p>End Date/Time: {{ event.end_date_time }}</p>
-    <p>Description: {{ event.description }}</p>
+    <div id="body" class="event-info">
+        <div class="event-details">
+            <h1>{{ event.name }}</h1>
+            <p>Start Date/Time: {{ event.start_date_time }}</p>
+            <p>End Date/Time: {{ event.end_date_time }}</p>
+            <p>Description: {{ event.description }}</p>
 
-    {% if event.image %}
-        <img src="{{ event.image.url }}" alt="{{ event.name }}">
-    {% endif %}
+            {% if event.image %}
+                <div class="event-image">
+                    <img src="{{ event.image.url }}" alt="{{ event.name }}">
+                </div>
+            {% endif %}
 
-    <p>Location: {{ event.location }}</p>
-    <p>Organizer: {{ event.organizer.name }}</p>
+            <p>Location: {{ event.location }}</p>
+            <p>Organizer: {{ event.organizer.name }}</p>
 
-    {% if request.user.profile_type == 'normal' %}
-        <button class='btn-register' type="button"><a href="{% url 'register event' event.slug %}">Register </a>
-        </button>
-    {% endif %}
 
-    {% if is_organizer %}
-        {#        <a href="{% url 'edit event' event.slug %}">Edit Event</a>#}
-        <a href="{% url 'delete event' event.slug %}">Delete Event</a>
-    {% endif %}
+            {% if request.user.profile_type == 'normal' %}
+                <button class="btn-register register-btn" type="button"><a
+                        href="{% url 'register event' event.slug %}">Register</a></button>
+            {% endif %}
+
+            {% if is_organizer %}
+                <div class="organizer-buttons">
+                    <button class="btn-register edit-btn" type="button"><a href="{% url 'edit event' event.slug %}">Edit
+                        Event</a></button>
+                    <button class="btn-register delete-btn" type="button"><a href="{% url 'delete event' event.slug %}">Delete
+                        Event</a></button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
+

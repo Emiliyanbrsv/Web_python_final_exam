@@ -2,11 +2,11 @@ from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Sum
 from django.http import Http404
-from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.views import generic as views
 
-from events_management.event.forms import EventCreateForm, EventRegistrationForm
+from events_management.event.forms import EventCreateForm, EventRegistrationForm, EventEditForm
 from events_management.event.models import Location, Event, EventViews, EventRegistration
 
 
@@ -66,15 +66,17 @@ class EventDetailsView(views.DetailView):
     context_object_name = 'event'
 
     def get_object(self, queryset=None):
-        event = super().get_object(queryset=queryset)
+        if not hasattr(self, '_event'):
+            event = super().get_object(queryset=queryset)
 
-        if not isinstance(self.request.user, AnonymousUser):
-            event_view, created = EventViews.objects.get_or_create(event=event, user=self.request.user)
-            if not created:
-                event_view.views_count += 1
-                event_view.save()
+            if not isinstance(self.request.user, AnonymousUser):
+                event_view, created = EventViews.objects.get_or_create(event=event, user=self.request.user)
+                if not created:
+                    event_view.views_count += 1
+                    event_view.save()
 
-        return event
+            self._event = event
+        return self._event
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -98,8 +100,24 @@ class EventDeleteView(views.DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class EventEditView(views.UpdateView):
+class EventEditView(LoginRequiredMixin, views.UpdateView):
     model = Event
+    form_class = EventEditForm
+    template_name = 'event/event_edit.html'
+
+    # success_url = reverse_lazy('details event', kwargs={'slug': self.object.slug})
+
+    def dispatch(self, request, *args, **kwargs):
+        event = self.get_object()
+
+        if request.user.pk != event.organizer.pk:
+            raise Http404("You are not allowed to delete this event.")
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        slug = self.object.slug
+        return reverse('details event', kwargs={'slug': slug})
 
 
 class RegisterEventView(LoginRequiredMixin, views.CreateView):
@@ -135,15 +153,12 @@ class Dashboard(LoginRequiredMixin, views.ListView):
 
     def get_queryset(self):
         profile = self.request.user.pk
-        print(profile)
 
         events_created = Event.objects.filter(organizer=profile)
 
-        # Filter events that the user is registered to via EventRegistration
         registered_events_ids = EventRegistration.objects.filter(user=profile).values_list('event_id', flat=True)
         events_registered = Event.objects.filter(id__in=registered_events_ids)
 
-        # Merge the two querysets to get a single list of events
         queryset = list(events_created) + list(events_registered)
 
         return queryset

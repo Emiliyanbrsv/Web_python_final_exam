@@ -204,6 +204,7 @@ p a:hover {
     /* Add any additional styles you want for the <a> tag inside h3 here */
     /* For example, text-decoration: none; to remove underlines on links */
 }
+
 #body.home .news {
     overflow: hidden;
     padding: 37px 0 0;
@@ -255,6 +256,12 @@ p a:hover {
 
 #body.subdivisions ul li > a {
     float: right;
+}
+
+.cropped-image1 {
+    object-fit: cover;
+    width: 270px;
+    height: 200px;
 }
 
 #body.about p {
@@ -583,6 +590,126 @@ p a:hover {
     color: #e49e06;
 }
 
+/* Styles for the event information */
+#body.event-info {
+    --event-info-height: 300px; /* Define the height as a custom property */
+
+    margin: 100px auto;
+    padding: 30px; /* Reduced padding to make the box smaller */
+    max-width: 600px; /* Changed width to max-width for responsiveness */
+    height: var(--event-info-height); /* Use the custom property for height */
+    background-color: #f2f2f2;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+}
+
+
+#body.event-info .event-details {
+    margin-bottom: 20px; /* Added space between rows */
+    text-align: center; /* Center all the content inside event-details */
+
+}
+
+#body.event-info h1 {
+    color: #e49e06;
+    font-family: anticregular;
+    font-size: 36px;
+    font-weight: 400;
+    margin: 30px;
+}
+
+#body.event-info p {
+    margin: 20px 0;
+    color: #959595;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    line-height: 20px;
+}
+
+#body.event-info .event-image {
+    width: 420px;
+    height: 220px;
+    margin: 0 auto; /* Center the image */
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+#body.event-info .event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#body.event-info button.btn-register {
+    display: block;
+    margin: 0 auto 10px; /* Center the buttons and add space between buttons and event-details */
+    padding: 8px 20px; /* Increased padding to make buttons wider */
+    background-color: #1bb5ac;
+    color: #ffffff;
+    font-size: 14px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    width: 40%; /* Set a percentage width for responsiveness */
+}
+
+#body.event-info button.btn-register.register-btn {
+    margin-bottom: 20px; /* Increased margin-bottom to add space between buttons */
+}
+
+#body.event-info button.btn-register:hover {
+    background-color: #0d9487; /* Changed hover background color for better contrast */
+}
+
+#body.event-info button.btn-register a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#body.event-info button.btn-register a:hover {
+    text-decoration: none;
+}
+
+/* Styles for the organizer buttons */
+#body.event-info .organizer-buttons {
+    text-align: center; /* Center the buttons */
+}
+
+#body.event-info .edit-btn,
+#body.event-info .delete-btn {
+    display: inline-block;
+    margin: 0 10px; /* Added space between buttons */
+    padding: 8px 20px; /* Increased padding to make buttons wider */
+    width: auto; /* Set the width to 'auto' to allow the buttons to expand */
+    background-color: #1bb5ac;
+    color: #ffffff;
+    font-size: 14px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+#body.event-info .edit-btn:hover,
+#body.event-info .delete-btn:hover {
+    background-color: #0d9487; /* Changed hover background color for better contrast */
+}
+
+#body.event-info .edit-btn a,
+#body.event-info .delete-btn a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#body.event-info .edit-btn a:hover,
+#body.event-info .delete-btn a:hover {
+    text-decoration: none;
+}
+
+
 .registration-form {
     margin: 50px auto;
     width: 400px;
@@ -724,10 +851,13 @@ p a:hover {
 }
 
 #footer div p {
-    color: #5bdee6;
+    color: #ffffff;
     display: block;
     float: left;
     margin: 20px 0;
+    /*color: #5bdee6;*/
+    font-family: anticregular;
+    font-size: 18px;
 }
 
 #footer div .connect {
@@ -740,7 +870,7 @@ p a:hover {
     display: block;
     float: left;
     height: 30px;
-    margin: 0 0 0 28px;
+    margin: 0 0 0 10px;
     text-indent: -99999px;
     width: 30px;
 }

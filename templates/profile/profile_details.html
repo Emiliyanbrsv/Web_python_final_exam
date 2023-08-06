@@ -11,7 +11,7 @@
             <p><img src="{{ profile.profile_image.url }}" alt="{{ profile.first_name }}"></p>
         {% endif %}
 
-    {% else %}
+    {% elif request.user.profile_type == 'organizer' %}
         <p>{{ organizer.name }}</p>
         <p>{{ organizer.description }}</p>
         <p>{{ organizer.phone_number }}</p>
@@ -25,3 +25,4 @@
 
 
 {% endblock %}
+

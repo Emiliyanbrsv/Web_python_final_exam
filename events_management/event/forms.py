@@ -3,7 +3,7 @@ from django import forms
 from events_management.event.models import Event, EventRegistration
 
 
-class EventCreateForm(forms.ModelForm):
+class EventBaseForm(forms.ModelForm):
     class Meta:
         model = Event
         exclude = ['organizer']
@@ -22,6 +22,14 @@ class EventCreateForm(forms.ModelForm):
                 },
             ),
         }
+
+
+class EventCreateForm(EventBaseForm):
+    pass
+
+
+class EventEditForm(EventBaseForm):
+    pass
 
 
 class EventRegistrationForm(forms.ModelForm):

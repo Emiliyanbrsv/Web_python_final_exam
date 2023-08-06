@@ -6,13 +6,15 @@
             {% for event in object_list %}
                 <li>
                     <div>
-                        <h3><a href="{% url 'details event' event.slug %}">{{ event.name }}</h3></a>
+                        <h3><a href="{% url 'details event' event.slug %}">{{ event.name }}</a></h3>
                         <p>
                             {{ event.description }}
                         </p>
                     </div>
-                    <a href="{% url 'details event' event.slug %}"><img src="{{ event.image.url }}" alt=""></a>
+                    <a href="{% url 'details event' event.slug %}"><img src="{{ event.image.url }}" alt="" class="cropped-image1"></a>
                 </li>
+            {% empty %}
+                <h3>No events in your dashboard</h3>
             {% endfor %}
         </ul>
     </div>
