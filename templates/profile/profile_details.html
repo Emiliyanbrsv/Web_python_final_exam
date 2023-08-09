@@ -1,28 +1,43 @@
 {% extends 'base.html' %}
 {% block content %}
+    <div id="body" class="event-info">
+        <div class="event-details">
+            {% if request.user.profile_type == 'normal' %}
+                <h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
+                <p>{{ profile.date_of_birth }}</p>
+                <p>{{ profile.gender }}</p>
 
-    {% if request.user.profile_type == 'normal' %}
-        <p>{{ profile.first_name }}</p>
-        <p>{{ profile.last_name }}</p>
-        <p>{{ profile.date_of_birth }}</p>
-        <p>{{ profile.gender }}</p>
+                {% if profile.profile_image %}
+                    <div class="profile-image">
+                        <img src="{{ profile.profile_image.url }}" alt="{{ profile.first_name }}"
+                             class="cropped-image2">
+                    </div>
+                {% endif %}
 
-        {% if profile.profile_image %}
-            <p><img src="{{ profile.profile_image.url }}" alt="{{ profile.first_name }}"></p>
-        {% endif %}
+            {% elif request.user.profile_type == 'organizer' %}
+                <h1>{{ organizer.name }}</h1>
+                <p>{{ organizer.description }}</p>
+                <p>{{ organizer.phone_number }}</p>
+                <p>{{ organizer.website }}</p>
+                {% if organizer.logo %}
+                    <div class="profile-image">
+                        <img src="{{ organizer.logo.url }}" alt="{{ event.name }}">
+                    </div>
+                {% endif %}
+            {% endif %}
 
-    {% elif request.user.profile_type == 'organizer' %}
-        <p>{{ organizer.name }}</p>
-        <p>{{ organizer.description }}</p>
-        <p>{{ organizer.phone_number }}</p>
-        <p>{{ organizer.website }}</p>
-    {% endif %}
+            <form action="{% url 'profile_edit' object.pk %}">
+                <button class="edit-btn" type="submit">
+                    Edit Profile
+                </button>
+            </form>
 
-
-    <button class='btn-register' type="button"><a href="{% url 'profile_edit' object.pk %}">Edit Profile</a></button>
-    <button class='btn-register' type="button"><a href="{% url 'profile_delete' object.pk %}">Delete Profile</a>
-    </button>
-
-
+            <form action="{% url 'profile_delete' object.pk %}">
+                <button class="delete-btn" type="submit">
+                    Delete Profile
+                </button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 

@@ -1,11 +1,17 @@
+import phonenumbers
+from phonenumbers import carrier, timezone, geocoder
+from phonenumbers.phonenumberutil import number_type
+from twilio.rest import Client
+
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Sum
 from django.http import Http404
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import generic as views
 
+from django.conf import settings
 from events_management.event.forms import EventCreateForm, EventRegistrationForm, EventEditForm
 from events_management.event.models import Location, Event, EventViews, EventRegistration
 
@@ -54,6 +60,7 @@ class EventListView(views.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         events = context['events']
+
         for event in events:
             event.total_views = get_total_views(event)
 
@@ -83,6 +90,7 @@ class EventDetailsView(views.DetailView):
         event = self.get_object()
 
         context['is_organizer'] = event.organizer.pk == self.request.user.pk
+        context['user_registered'] = event.is_registered(self.request.user)
         return context
 
 
@@ -105,8 +113,6 @@ class EventEditView(LoginRequiredMixin, views.UpdateView):
     form_class = EventEditForm
     template_name = 'event/event_edit.html'
 
-    # success_url = reverse_lazy('details event', kwargs={'slug': self.object.slug})
-
     def dispatch(self, request, *args, **kwargs):
         event = self.get_object()
 
@@ -120,6 +126,20 @@ class EventEditView(LoginRequiredMixin, views.UpdateView):
         return reverse('details event', kwargs={'slug': slug})
 
 
+def send_sms(phone_number, message):
+    account_sid = settings.TWILIO_ACCOUNT_SID
+    auth_token = settings.TWILIO_AUTH_TOKEN
+    twilio_phone_number = settings.TWILIO_PHONE_NUMBER
+
+    client = Client(account_sid, auth_token)
+    message = client.messages.create(
+        body=message,
+        from_=twilio_phone_number,
+        to=phone_number
+    )
+    return message
+
+
 class RegisterEventView(LoginRequiredMixin, views.CreateView):
     template_name = 'event/event_register.html'
     form_class = EventRegistrationForm
@@ -131,6 +151,7 @@ class RegisterEventView(LoginRequiredMixin, views.CreateView):
         profile = self.request.user.profile
         initial['first_name'] = profile.first_name
         initial['last_name'] = profile.last_name
+        initial['phone_number'] = profile.phone_number
         return initial
 
     def get_context_data(self, **kwargs):
@@ -145,6 +166,37 @@ class RegisterEventView(LoginRequiredMixin, views.CreateView):
         form.instance.event = self.get_context_data()['event']
 
         return super().form_valid(form)
+
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user
+    #     event = self.get_context_data()['event']
+    #     form.instance.event = event
+    #
+    #     response = super().form_valid(form)
+    #
+    #     phone_number = f'+{self.request.user.profile.phone_number}'
+    #     message = f"Thank you for registering for {event.name}.Have a nice day {self.request.user.profile.first_name}!"
+    #
+    #     send_sms(phone_number, message)
+    #
+    #     return response
+
+
+class UnregisterEventView(LoginRequiredMixin, views.View):
+    def get(self, request, *args, **kwargs):
+        return redirect('details event', slug=self.kwargs['slug'])
+
+    def post(self, request, *args, **kwargs):
+        slug = self.kwargs['slug']
+        event = get_object_or_404(Event, slug=slug)
+
+        try:
+            registration = EventRegistration.objects.get(user=request.user, event=event)
+            registration.delete()
+        except EventRegistration.DoesNotExist:
+            pass
+
+        return redirect('details event', slug=slug)
 
 
 class Dashboard(LoginRequiredMixin, views.ListView):

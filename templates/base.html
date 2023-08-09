@@ -13,13 +13,18 @@
         <a href="{% url 'locations' %}" id="logo"><img src="{% static 'images/emo (4).png' %}" alt="logo"></a>
         <ul>
             <li class="selected">
-                <a href="{% url 'locations' %}">Events</a>#}
+                <a href="{% url 'locations' %}">Events</a>
             </li>
 
             {% if request.user.is_authenticated %}
                 <li>
                     <a href="{% url 'dashboard' %}">Dashboard</a>
                 </li>
+                {% if request.user.is_staff %}
+                    <li>
+                        <a href="#">Add Location</a>
+                    </li>
+                {% endif %}
                 {% if request.user.profile_type == 'organizer' %}
                     <li>
                         <a href="{% url 'create event' %}">Add Event</a>

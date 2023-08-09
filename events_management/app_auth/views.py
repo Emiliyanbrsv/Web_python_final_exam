@@ -28,23 +28,9 @@ class RegisterUserView(views.View):
             # Log in the user
             login(request, user)
 
-            # Redirect to the profile details page with the user's pk
             return redirect('profile_edit', pk=user.pk)
 
         return render(request, self.template_name, {'form': form})
-
-    # success_url = reverse_lazy('locations')
-
-    # def form_valid(self, form):
-    #     result = super().form_valid(form)
-    #
-    #     login(self.request, self.object)
-    #
-    #     return result
-    #
-    # def get_success_url(self):
-    #     pk = self.request.user.pk
-    #     return reverse('profile_details', kwargs={'pk': pk})
 
 
 class LoginUserView(auth_views.LoginView):

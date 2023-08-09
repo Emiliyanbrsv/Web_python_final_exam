@@ -24,8 +24,35 @@ class EventBaseForm(forms.ModelForm):
         }
 
 
-class EventCreateForm(EventBaseForm):
-    pass
+class EventCreateForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        exclude = ['organizer']
+
+        widgets = {
+            'name': forms.TextInput(
+                attrs={
+                    'placeholder': 'Event name',
+                },
+            ),
+            'description': forms.Textarea(
+                attrs={
+                    'placeholder': 'Event description'
+                },
+            ),
+            'start_date_time': forms.DateTimeInput(
+                attrs={
+                    'placeholder': 'dd/mm/yyyy hh:mm',
+                    'type': 'datetime-local',
+                },
+            ),
+            'end_date_time': forms.DateTimeInput(
+                attrs={
+                    'placeholder': 'dd/mm/yyyy hh:mm',
+                    'type': 'datetime-local',
+                },
+            ),
+        }
 
 
 class EventEditForm(EventBaseForm):

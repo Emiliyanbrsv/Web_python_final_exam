@@ -61,6 +61,12 @@ class Profile(models.Model):
         blank=True,
     )
 
+    phone_number = models.CharField(
+        max_length=10,
+        null=True,
+        blank=True,
+    )
+
     gender = models.CharField(
         choices=Gender.choices(),
         max_length=Gender.max_length(),

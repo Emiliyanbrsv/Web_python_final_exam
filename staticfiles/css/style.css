@@ -97,7 +97,7 @@ p a:hover {
 /*------------------------- Body ------------------------*/
 #body {
     margin: 0 auto 97px;
-    min-height: 1005px;
+    min-height: 690px;
     padding: 38px 29px 0;
     width: 902px;
 }
@@ -250,8 +250,9 @@ p a:hover {
 }
 
 #body.subdivisions ul li div p {
-    margin: 6px 0 0;
+    margin: 6px 10px 0;
     text-align: justify;
+    font-size: 14px;
 }
 
 #body.subdivisions ul li > a {
@@ -472,6 +473,38 @@ p a:hover {
     text-decoration: none;
 }
 
+/* Style for the pagination section */
+.paging {
+    text-align: center;
+    margin-top: 20px;
+    width: 150px;
+    color: #E49E06;
+}
+
+.paging a {
+    margin: 0 5px;
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.paging a:hover {
+    color: #0056b3;
+}
+
+.paging .current {
+    font-weight: bold;
+}
+
+/* Positioning the pagination section right before the footer */
+.paging {
+    position: absolute;
+    bottom: 50px; /* Adjust this value based on your design */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
 #body.blog > div:first-child > ul.paging li a:hover {
     color: #E49E06;
 }
@@ -565,20 +598,31 @@ p a:hover {
     text-decoration: underline;
 }
 
+
 #body.subdivisions ul, #body.blog > div:first-child > ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
+
+#body.subdivisions ul li {
+    list-style: none;
+    margin: 20px auto;
+    padding: 0;
+    background: #f2f2f2;
+    border: 1px solid #dcdcdc;
+    border-radius: 15px;
+}
+
 #body.subdivisions ul li div h3, #body.about h3 {
     color: #e49e06;
     font-family: anticregular;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 400;
     letter-spacing: .05em;
     line-height: 24px;
-    margin: 14px 0 0;
+    margin:14px 10px 0;
 }
 
 #body.subdivisions ul li > a img:hover, #body.blog > div:first-child > ul > li > a img:hover {
@@ -594,13 +638,13 @@ p a:hover {
 #body.event-info {
     --event-info-height: 300px; /* Define the height as a custom property */
 
-    margin: 100px auto;
+    margin-top: 80px;
     padding: 30px; /* Reduced padding to make the box smaller */
     max-width: 600px; /* Changed width to max-width for responsiveness */
     height: var(--event-info-height); /* Use the custom property for height */
     background-color: #f2f2f2;
     border: 1px solid #dcdcdc;
-    border-radius: 5px;
+    border-radius: 46px;
 }
 
 
@@ -634,6 +678,21 @@ p a:hover {
     border-radius: 5px;
 }
 
+#body.event-info .profile-image {
+    width: 200px;
+    height: 190px;
+    margin: 0 auto; /* Center the image */
+    overflow: hidden;
+    border-radius: 5px;
+    padding-bottom: 200px;
+}
+
+.cropped-image2 {
+    object-fit: cover;
+    width: 200px;
+    height: 190px;
+}
+
 #body.event-info .event-image img {
     width: 100%;
     height: 100%;
@@ -652,7 +711,7 @@ p a:hover {
     cursor: pointer;
     text-align: center;
     text-decoration: none;
-    width: 40%; /* Set a percentage width for responsiveness */
+    width: 20%; /* Set a percentage width for responsiveness */
 }
 
 #body.event-info button.btn-register.register-btn {
@@ -680,9 +739,9 @@ p a:hover {
 #body.event-info .edit-btn,
 #body.event-info .delete-btn {
     display: inline-block;
-    margin: 0 10px; /* Added space between buttons */
+    margin: 10px 10px; /* Added space between buttons */
     padding: 8px 20px; /* Increased padding to make buttons wider */
-    width: auto; /* Set the width to 'auto' to allow the buttons to expand */
+    width: 22%; /* Set the width to 'auto' to allow the buttons to expand */
     background-color: #1bb5ac;
     color: #ffffff;
     font-size: 14px;
@@ -835,6 +894,19 @@ p a:hover {
 
 .login-form a:hover {
     text-decoration: underline;
+}
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30vh;
+    text-align: center;
+
+}
+
+.center-content h1 {
+    font-size: 36px;
+    color: #e49e06;
 }
 
 /*------------------------- Footer ------------------------*/

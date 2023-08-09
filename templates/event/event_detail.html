@@ -1,29 +1,3 @@
-{#{% extends 'base.html' %}#}
-{#{% block content %}#}
-{#    <h1>{{ event.name }}</h1>#}
-{#    <p>Start Date/Time: {{ event.start_date_time }}</p>#}
-{#    <p>End Date/Time: {{ event.end_date_time }}</p>#}
-{#    <p>Description: {{ event.description }}</p>#}
-{##}
-{#    {% if event.image %}#}
-{#        <img src="{{ event.image.url }}" alt="{{ event.name }}">#}
-{#    {% endif %}#}
-{##}
-{#    <p>Location: {{ event.location }}</p>#}
-{#    <p>Organizer: {{ event.organizer.name }}</p>#}
-{##}
-{#    {% if request.user.profile_type == 'normal' %}#}
-{#        <button class='btn-register' type="button"><a href="{% url 'register event' event.slug %}">Register </a>#}
-{#        </button>#}
-{#    {% endif %}#}
-{##}
-{#    {% if is_organizer %}#}
-{#        <button class='btn-register' type="button"><a href="{% url 'edit event' event.slug %}">Edit Event</a></button>#}
-{#        <button class='btn-register' type="button"><a href="{% url 'delete event' event.slug %}">Delete Event</a>#}
-{#        </button>#}
-{#    {% endif %}#}
-{#{% endblock %}#}
-
 {% extends 'base.html' %}
 {% block content %}
     <div id="body" class="event-info">
@@ -43,19 +17,39 @@
             <p>Organizer: {{ event.organizer.name }}</p>
 
 
-            {% if request.user.profile_type == 'normal' %}
-                <button class="btn-register register-btn" type="button"><a
-                        href="{% url 'register event' event.slug %}">Register</a></button>
+            {% if request.user.profile_type == 'normal' or not request.user.is_authenticated %}
+                {% if not user_registered %}
+                    <form action="{% url 'register event' event.slug %}">
+                        <button class="btn-register register-btn" type="submit">Register</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+
+            {% if request.user.is_authenticated %}
+                {% if request.user.profile_type == 'normal' and user_registered %}
+                    <form action="{% url 'unregister_event' event.slug %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn-register" type="submit">Unregister</button>
+                    </form>
+                {% endif %}
             {% endif %}
 
             {% if is_organizer %}
                 <div class="organizer-buttons">
-                    <button class="btn-register edit-btn" type="button"><a href="{% url 'edit event' event.slug %}">Edit
-                        Event</a></button>
-                    <button class="btn-register delete-btn" type="button"><a href="{% url 'delete event' event.slug %}">Delete
-                        Event</a></button>
-                </div>
+                <form action="{% url 'edit event' event.slug %}">
+                    <button class="edit-btn" type="submit">
+                        Edit Event
+                    </button>
+                </form>
+
+                <form action="{% url 'delete event' event.slug %}">
+                    <button class="delete-btn" type="submit">
+                        Delete Event
+                    </button>
+                </form>
             {% endif %}
+
+            </div>
         </div>
     </div>
 {% endblock %}

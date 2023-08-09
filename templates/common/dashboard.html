@@ -11,11 +11,15 @@
                             {{ event.description }}
                         </p>
                     </div>
-                    <a href="{% url 'details event' event.slug %}"><img src="{{ event.image.url }}" alt="" class="cropped-image1"></a>
+                    <a href="{% url 'details event' event.slug %}"><img src="{{ event.image.url }}" alt=""
+                                                                        class="cropped-image1"></a>
                 </li>
             {% empty %}
-                <h3>No events in your dashboard</h3>
+                <div class="center-content">
+                    <h1>No events in your Dashboard!</h1>
+                </div>
             {% endfor %}
+            <p></p>
         </ul>
     </div>
 

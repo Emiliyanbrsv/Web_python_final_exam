@@ -132,6 +132,9 @@ class Event(models.Model):
             self.slug = slugify(f'{self.name}-{self.pk}')
         return super().save(*args, **kwargs)
 
+    def is_registered(self, user):
+        return self.eventregistration_set.filter(user=user).exists()
+
     class Meta:
         ordering = ('pk',)
 
@@ -140,7 +143,6 @@ class EventViews(models.Model):
     event = models.ForeignKey(
         Event,
         on_delete=models.CASCADE,
-        # related_name='eventviews',
     )
 
     user = models.ForeignKey(
@@ -161,7 +163,6 @@ class EventViews(models.Model):
 
 
 class EventRegistration(models.Model):
-
     first_name = models.CharField(
         max_length=30,
         null=False,
@@ -185,7 +186,8 @@ class EventRegistration(models.Model):
         on_delete=models.CASCADE
     )
 
-    phone_number = models.IntegerField(
+    phone_number = models.CharField(
+        max_length=20,
         null=False,
         blank=False,
     )
