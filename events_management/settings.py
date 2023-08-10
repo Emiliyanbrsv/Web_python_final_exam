@@ -115,6 +115,11 @@ LOGOUT_REDIRECT_URL = reverse_lazy('login_user')
 
 AUTH_USER_MODEL = 'app_auth.AppUser'
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a6918f626d9d3ae898df0bc7e062543bb3629cc4
 TWILIO_ACCOUNT_SID = ''
 TWILIO_AUTH_TOKEN = ''
 TWILIO_PHONE_NUMBER = '+13257700365'
+
