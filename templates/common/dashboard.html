@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 
     <div id="body" class="subdivisions">
@@ -11,12 +12,19 @@
                             {{ event.description }}
                         </p>
                     </div>
-                    <a href="{% url 'details event' event.slug %}"><img src="{{ event.image.url }}" alt=""
-                                                                        class="cropped-image1"></a>
+
+                    <a href="{% url 'details event' event.slug %}">
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" alt="{{ event.image }}" class="cropped-image1">
+                        {% else %}
+                            <img src="{% static 'images/Image_not_available.png' %}" alt="{{ event.name }}" class="cropped-image1">
+                        {% endif %}
+                    </a>
                 </li>
             {% empty %}
                 <div class="center-content">
-                    <h1>No events in your Dashboard!</h1>
+{#                    <h1>No events in your Dashboard!</h1>#}
+                        <img src="{% static 'images/no-events.png' %}" alt="#">
                 </div>
             {% endfor %}
             <p></p>

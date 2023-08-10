@@ -1,8 +1,3 @@
-import phonenumbers
-from phonenumbers import carrier, timezone, geocoder
-from phonenumbers.phonenumberutil import number_type
-from twilio.rest import Client
-
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Sum
@@ -11,28 +6,26 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import generic as views
 
-from django.conf import settings
 from events_management.event.forms import EventCreateForm, EventRegistrationForm, EventEditForm
-from events_management.event.models import Location, Event, EventViews, EventRegistration
+from events_management.event.models import Event, EventViews, EventRegistration
 
 
 # event_views
-#
-class OrganizerRequiredMixin(UserPassesTestMixin):
+class NormalUserMixin(UserPassesTestMixin):
+    login_url = reverse_lazy('login_user')
+
     def test_func(self):
-        return self.request.user.profile_type == 'organizer'
+        return self.request.user.is_authenticated and self.request.user.profile_type == 'normal user'
 
 
-class LocationListView(views.ListView):
-    model = Location
-    template_name = 'event/locations.html'
+class OrganizerRequiredMixin(UserPassesTestMixin):
+    login_url = reverse_lazy('login')
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.profile_type == 'organizer'
 
 
-class LocationCreateView(views.CreateView):
-    pass
-
-
-class EventCreateView(OrganizerRequiredMixin, views.CreateView):
+class EventCreateView(LoginRequiredMixin, OrganizerRequiredMixin, views.CreateView):
     form_class = EventCreateForm
     template_name = 'event/event_create.html'
 
@@ -41,11 +34,6 @@ class EventCreateView(OrganizerRequiredMixin, views.CreateView):
     def form_valid(self, form):
         form.instance.organizer = self.request.user.organizer
         return super().form_valid(form)
-
-
-def get_total_views(event):
-    total_views = EventViews.objects.filter(event=event).aggregate(Sum('views_count'))['views_count__sum']
-    return total_views or 0
 
 
 class EventListView(views.ListView):
@@ -67,6 +55,11 @@ class EventListView(views.ListView):
         return context
 
 
+def get_total_views(event):
+    total_views = EventViews.objects.filter(event=event).aggregate(Sum('views_count'))['views_count__sum']
+    return total_views or 0
+
+
 class EventDetailsView(views.DetailView):
     model = Event
     template_name = 'event/event_detail.html'
@@ -78,9 +71,11 @@ class EventDetailsView(views.DetailView):
 
             if not isinstance(self.request.user, AnonymousUser):
                 event_view, created = EventViews.objects.get_or_create(event=event, user=self.request.user)
-                if not created:
+                if created:
+                    event_view.views_count = 1
+                else:
                     event_view.views_count += 1
-                    event_view.save()
+                event_view.save()
 
             self._event = event
         return self._event
@@ -89,12 +84,13 @@ class EventDetailsView(views.DetailView):
         context = super().get_context_data(**kwargs)
         event = self.get_object()
 
-        context['is_organizer'] = event.organizer.pk == self.request.user.pk
-        context['user_registered'] = event.is_registered(self.request.user)
+        if self.request.user.is_authenticated:
+            context['is_organizer'] = event.organizer.pk == self.request.user.pk
+            context['user_registered'] = event.is_registered(self.request.user)
         return context
 
 
-class EventDeleteView(views.DeleteView):
+class EventDeleteView(LoginRequiredMixin, OrganizerRequiredMixin, views.DeleteView):
     model = Event
     success_url = reverse_lazy('locations')
     template_name = 'event/event_delete.html'
@@ -108,7 +104,7 @@ class EventDeleteView(views.DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class EventEditView(LoginRequiredMixin, views.UpdateView):
+class EventEditView(LoginRequiredMixin, OrganizerRequiredMixin, views.UpdateView):
     model = Event
     form_class = EventEditForm
     template_name = 'event/event_edit.html'
@@ -117,27 +113,13 @@ class EventEditView(LoginRequiredMixin, views.UpdateView):
         event = self.get_object()
 
         if request.user.pk != event.organizer.pk:
-            raise Http404("You are not allowed to delete this event.")
+            raise Http404("You are not allowed to edit this event.")
 
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         slug = self.object.slug
         return reverse('details event', kwargs={'slug': slug})
-
-
-def send_sms(phone_number, message):
-    account_sid = settings.TWILIO_ACCOUNT_SID
-    auth_token = settings.TWILIO_AUTH_TOKEN
-    twilio_phone_number = settings.TWILIO_PHONE_NUMBER
-
-    client = Client(account_sid, auth_token)
-    message = client.messages.create(
-        body=message,
-        from_=twilio_phone_number,
-        to=phone_number
-    )
-    return message
 
 
 class RegisterEventView(LoginRequiredMixin, views.CreateView):
@@ -182,7 +164,7 @@ class RegisterEventView(LoginRequiredMixin, views.CreateView):
     #     return response
 
 
-class UnregisterEventView(LoginRequiredMixin, views.View):
+class UnregisterEventView(LoginRequiredMixin, NormalUserMixin, views.View):
     def get(self, request, *args, **kwargs):
         return redirect('details event', slug=self.kwargs['slug'])
 
@@ -197,20 +179,3 @@ class UnregisterEventView(LoginRequiredMixin, views.View):
             pass
 
         return redirect('details event', slug=slug)
-
-
-class Dashboard(LoginRequiredMixin, views.ListView):
-    model = Event
-    template_name = 'common/dashboard.html'
-
-    def get_queryset(self):
-        profile = self.request.user.pk
-
-        events_created = Event.objects.filter(organizer=profile)
-
-        registered_events_ids = EventRegistration.objects.filter(user=profile).values_list('event_id', flat=True)
-        events_registered = Event.objects.filter(id__in=registered_events_ids)
-
-        queryset = list(events_created) + list(events_registered)
-
-        return queryset

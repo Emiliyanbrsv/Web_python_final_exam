@@ -5,6 +5,8 @@
         <form action="{% url 'register_user' %}" method="post" class="registration-form">
 
             {{ form }}
+
+            <input type="hidden" name="next" value="{{ next }}">
             {% csrf_token %}
 
             <button class="btn-register" type="submit">Register</button>

@@ -1,34 +1,17 @@
-from enum import Enum
-
 from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from events_management.user_profile.validators import check_if_date_is_future, validate_file_less_than_5mb
+from events_management.user_profile.validators import check_if_date_is_future
+from events_management.utils.utils import Gender
+from events_management.user_profile.validators import validate_name_start_with_capital_letter, validate_name_is_only_letters, \
+    validate_phone_number, validate_file_less_than_5mb
 
 # user_profile
 
 UserModel = get_user_model()
-
-
-class ChoicesMixin:
-    @classmethod
-    def choices(cls):
-        return [(choice.value, choice.name) for choice in cls]
-
-
-class ChoicesStringsMixin(ChoicesMixin):
-    @classmethod
-    def max_length(cls):
-        return max(len(x.value) for x in cls)
-
-
-class Gender(ChoicesStringsMixin, Enum):
-    MALE = 'Male'
-    FEMALE = 'Female'
-    DO_NOT_SHOW = 'Do not show'
 
 
 class Profile(models.Model):
@@ -39,6 +22,8 @@ class Profile(models.Model):
         max_length=__MAX_LEN_NAME,
         validators=(
             MinLengthValidator(__MIN_LEN_NAME),
+            validate_name_start_with_capital_letter,
+            validate_name_is_only_letters,
         ),
         null=False,
         blank=False,
@@ -48,6 +33,8 @@ class Profile(models.Model):
         max_length=__MAX_LEN_NAME,
         validators=(
             MinLengthValidator(__MIN_LEN_NAME),
+            validate_name_start_with_capital_letter,
+            validate_name_is_only_letters,
         ),
         null=False,
         blank=False,
@@ -62,7 +49,11 @@ class Profile(models.Model):
     )
 
     phone_number = models.CharField(
-        max_length=10,
+        max_length=12,
+        validators=(
+            MinLengthValidator(5),
+            validate_phone_number,
+        ),
         null=True,
         blank=True,
     )
@@ -89,23 +80,49 @@ class Profile(models.Model):
 
 
 class Organizer(models.Model):
+    __MAX_LEN_NAME = 30
+    __MIN_LEN_NAME = 2
+    __MAX_LEN_DESCRIPTION = 300
+    __MIN_LEN_DESCRIPTION = 10
+    __MAX_LEN_WEBSITE = 254
+    __MIN_LEN_WEBSITE = 2
+
     name = models.CharField(
-        max_length=300
+        max_length=__MAX_LEN_NAME,
+        validators=(
+            MinLengthValidator(__MIN_LEN_NAME),
+            validate_name_start_with_capital_letter,
+        ),
+        null=False,
+        blank=False,
     )
 
     description = models.TextField(
-        max_length=300
+        max_length=__MAX_LEN_DESCRIPTION,
+        validators=(
+            MinLengthValidator(__MIN_LEN_DESCRIPTION),
+        ),
+        null=False,
+        blank=False,
     )
 
     website = models.URLField(
-        max_length=200
-
-    )
-    phone_number = models.CharField(
-        max_length=20,
+        max_length=__MAX_LEN_WEBSITE,
         validators=(
-            MinLengthValidator(4),
+            MinLengthValidator(__MIN_LEN_WEBSITE),
         ),
+        null=True,
+        blank=True,
+    )
+
+    phone_number = models.CharField(
+        max_length=12,
+        validators=(
+            MinLengthValidator(5),
+            validate_phone_number,
+        ),
+        null=False,
+        blank=False,
     )
 
     logo = models.ImageField(

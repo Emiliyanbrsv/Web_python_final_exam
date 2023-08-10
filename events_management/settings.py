@@ -8,7 +8,10 @@ SECRET_KEY = 'django-insecure-ttb!2z@cen&y^%lrz(fcik#o$$q3@kld9+mt52^ufz9e@(rxd1
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,6 +24,7 @@ INSTALLED_APPS = [
     'events_management.app_auth',
     'events_management.event',
     'events_management.user_profile',
+    'events_management.common',
 ]
 
 MIDDLEWARE = [
@@ -58,9 +62,13 @@ WSGI_APPLICATION = 'events_management.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "event_system_db",
+        "USER": "postgres-user",
+        "PASSWORD": "350164",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
 
@@ -97,7 +105,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# TODO: fix reverse_lazy
 LOGIN_REDIRECT_URL = reverse_lazy('locations')
 
 LOGIN_URL = '/login/'
@@ -108,7 +115,6 @@ LOGOUT_REDIRECT_URL = reverse_lazy('login_user')
 
 AUTH_USER_MODEL = 'app_auth.AppUser'
 
-
 TWILIO_ACCOUNT_SID = 'AC0aa6695ed2edc30c88b38d22403faeb6'
-TWILIO_AUTH_TOKEN = '0fa11bbd4990baf07db66b142a92e58a'
+TWILIO_AUTH_TOKEN = 'bf702c5830cb292f780f59c0e7e08358'
 TWILIO_PHONE_NUMBER = '+13257700365'

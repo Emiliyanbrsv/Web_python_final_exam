@@ -1,27 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
     <div id="body" class="event-info">
         <div class="event-details">
             {% if request.user.profile_type == 'normal' %}
-                <h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
-                <p>{{ profile.date_of_birth }}</p>
-                <p>{{ profile.gender }}</p>
 
+                <h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
+                {% if profile.date_of_birth %}
+
+                    <p>Date of birth: {{ profile.date_of_birth }}</p>
+                {% endif %}
+
+                <p>Gender: {{ profile.gender }}</p>
+
+                {% if profile.phone_number %}
+                    <p>Phone number: {{ profile.phone_number }}</p>
+                {% endif %}
+
+                <p>Profile Image:</p>
                 {% if profile.profile_image %}
                     <div class="profile-image">
                         <img src="{{ profile.profile_image.url }}" alt="{{ profile.first_name }}"
+                             class="cropped-image2">
+                    </div>
+                {% else %}
+                    <div class="profile-image">
+                        <img src="{% static 'images/profile.webp' %}" alt="{{ profile.first_name }}"
                              class="cropped-image2">
                     </div>
                 {% endif %}
 
             {% elif request.user.profile_type == 'organizer' %}
                 <h1>{{ organizer.name }}</h1>
-                <p>{{ organizer.description }}</p>
-                <p>{{ organizer.phone_number }}</p>
-                <p>{{ organizer.website }}</p>
+                <p>Description: {{ organizer.description }}</p>
+                <p>Phone number: {{ organizer.phone_number }}</p>
+                {% if organizer.website %}
+                    <p>{{ organizer.website }}</p>
+                {% else %}
+                    <p>Company without website</p>
+                {% endif %}
                 {% if organizer.logo %}
                     <div class="profile-image">
-                        <img src="{{ organizer.logo.url }}" alt="{{ event.name }}">
+                        <img src="{{ organizer.logo.url }}" alt="{{ event.name }}"
+                             class="cropped-image2">
+                    </div>
+                {% else %}
+                    <div class="profile-image">
+                        <img src="{% static 'images/profile.webp' %}" alt="{{ organizer.first_name }}"
+                             class="cropped-image2">
                     </div>
                 {% endif %}
             {% endif %}
@@ -35,6 +61,12 @@
             <form action="{% url 'profile_delete' object.pk %}">
                 <button class="delete-btn" type="submit">
                     Delete Profile
+                </button>
+            </form>
+
+            <form action="{% url 'change_password' %}">
+                <button class="delete-btn" type="submit">
+                    Change Password
                 </button>
             </form>
         </div>

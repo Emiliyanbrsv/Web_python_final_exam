@@ -1,64 +1,15 @@
-from autoslug import AutoSlugField
 from autoslug.utils import slugify
 from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator
 from django.db import models
 
+from events_management.common.models import Location
 from events_management.event.validators import check_if_date_is_past
-from events_management.event.validators import validate_file_less_than_5mb
 from events_management.user_profile.models import Organizer
+from events_management.event.validators import validate_file_less_than_5mb, validate_name_start_with_capital_letter, \
+    validate_name_is_only_letters, validate_phone_number
 
 UserModel = get_user_model()
-
-
-# event model
-class Location(models.Model):
-    __NAME_MAX_LEN = 30
-    __NAME_MIN_LEN = 2
-    __MAX_LEN_DESCRIPTION = 300
-    __MIN_LEN_DESCRIPTION = 10
-
-    city_name = models.CharField(
-        max_length=__NAME_MAX_LEN,
-        validators=(
-            MinLengthValidator(__NAME_MIN_LEN),
-        ),
-        null=False,
-        blank=False,
-    )
-
-    country = models.CharField(
-        max_length=__NAME_MAX_LEN,
-        validators=(
-            MinLengthValidator(__NAME_MIN_LEN),
-        ),
-        null=False,
-        blank=False,
-    )
-
-    description = models.TextField(
-        max_length=__MAX_LEN_DESCRIPTION,
-        validators=(
-            MinLengthValidator(__MIN_LEN_DESCRIPTION),
-        ),
-        null=False,
-        blank=False,
-    )
-
-    image = models.ImageField(
-        upload_to='locations/',
-        validators=(
-            validate_file_less_than_5mb,
-        ),
-        null=False,
-        blank=False,
-    )
-
-    class Meta:
-        ordering = ('pk',)
-
-    def __str__(self):
-        return f'{self.city_name}, {self.country}'
 
 
 class Event(models.Model):
@@ -135,6 +86,9 @@ class Event(models.Model):
     def is_registered(self, user):
         return self.eventregistration_set.filter(user=user).exists()
 
+    def __str__(self):
+        return f"{self.name}"
+
     class Meta:
         ordering = ('pk',)
 
@@ -154,29 +108,53 @@ class EventViews(models.Model):
         default=0
     )
 
-    # date_and_time_of_view = models.DateTimeField(
-    #     auto_now_add=True,
-    # )
+    date_and_time_of_view = models.DateTimeField(
+        auto_now_add=True
+    )
 
     def __str__(self):
         return f"{self.user.username} viewed {self.event.name} ({self.views_count} views)"
 
 
 class EventRegistration(models.Model):
+    __MAX_LEN_NAME = 30
+    __MIN_LEN_NAME = 2
+    __DEFAULT_ATTENDEES = 1
+
     first_name = models.CharField(
-        max_length=30,
+        max_length=__MAX_LEN_NAME,
+        validators=(
+            MinLengthValidator(__MIN_LEN_NAME),
+            validate_name_start_with_capital_letter,
+            validate_name_is_only_letters,
+        ),
         null=False,
         blank=False,
     )
 
     last_name = models.CharField(
-        max_length=30,
+        max_length=__MAX_LEN_NAME,
+        validators=(
+            MinLengthValidator(__MIN_LEN_NAME),
+            validate_name_start_with_capital_letter,
+            validate_name_is_only_letters,
+        ),
         null=False,
         blank=False,
     )
 
     attendees = models.PositiveIntegerField(
-        default=1,
+        default=__DEFAULT_ATTENDEES,
+        null=False,
+        blank=False,
+    )
+
+    phone_number = models.CharField(
+        max_length=12,
+        validators=(
+            MinLengthValidator(5),
+            validate_phone_number,
+        ),
         null=False,
         blank=False,
     )
@@ -184,12 +162,6 @@ class EventRegistration(models.Model):
     user = models.ForeignKey(
         UserModel,
         on_delete=models.CASCADE
-    )
-
-    phone_number = models.CharField(
-        max_length=20,
-        null=False,
-        blank=False,
     )
 
     event = models.ForeignKey(

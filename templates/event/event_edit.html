@@ -2,7 +2,7 @@
 {% block content %}
 
     <div id="body">
-        <form action="{% url 'edit event' event.slug %}" method="post" class="registration-form">
+        <form action="{% url 'edit event' event.slug %}" enctype="multipart/form-data" method="post" class="registration-form">
             {{ form.as_p }}
             {% csrf_token %}
 

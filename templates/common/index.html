@@ -1,4 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
 {% block content %}
-<h1>This is the main page</h1>
+
+    <div id="body" class="home">
+        {% for location in locations %}
+            <div class="{% cycle 'article' 'news' %}">
+                <img src="{{ location.image.url }}" alt="#" class="cropped-image">
+                <h3>
+                    <a href="{% url 'location event' city_name=location.city_name %}">{{ location.city_name }}, {{ location.country }}</a>
+                </h3>
+                <p>
+                    {{ location.description }}
+                </p>
+
+                {% if request.user|user_belongs_to_group:'Superusers_EMS' %}
+                    <form action="{% url 'location delete' location.pk %}" method="post" class="">
+                        {{ form }}
+                        {% csrf_token %}
+                        <button class='btn-register' type="submit">
+                            Delete Location
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}

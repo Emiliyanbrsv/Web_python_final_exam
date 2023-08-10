@@ -5,8 +5,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('events_management.common.urls')),
     path('', include('events_management.app_auth.urls')),
-    path('', include('events_management.event.urls')),
+    path('event/', include('events_management.event.urls')),
     path('profile/', include('events_management.user_profile.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

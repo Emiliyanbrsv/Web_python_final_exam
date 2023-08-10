@@ -36,7 +36,6 @@ class AppUserManager(auth_models.BaseUserManager):
 
 
 class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
-
     USER_TYPE_CHOICES = (
         ('normal', 'Normal User'),
         ('organizer', 'Organizer'),
@@ -52,7 +51,10 @@ class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
         unique=True,
     )
 
-    profile_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='normal')
+    profile_type = models.CharField(
+        max_length=10,
+        choices=USER_TYPE_CHOICES,
+        default='normal')
 
     is_staff = models.BooleanField(
         default=False,

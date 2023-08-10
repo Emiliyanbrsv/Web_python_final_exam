@@ -9,6 +9,21 @@ class NormalProfileEditForm(forms.ModelForm):
         exclude = ['user']
 
         widgets = {
+            'first_name': forms.TextInput(
+                attrs={
+                    'placeholder': 'First Name'
+                },
+            ),
+            'last_name': forms.TextInput(
+                attrs={
+                    'placeholder': 'Last Name'
+                },
+            ),
+            'phone_number': forms.TextInput(
+                attrs={
+                    'placeholder': 'Phone Number'
+                },
+            ),
             'date_of_birth': forms.DateInput(
                 attrs={
                     'placeholder': 'mm/dd/yyyy',

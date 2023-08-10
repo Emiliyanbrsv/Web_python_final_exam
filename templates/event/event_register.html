@@ -2,7 +2,7 @@
 {% block content %}
 
     <div id="body">
-        <form action="{% url 'register event' event.slug %}" method="post" class="registration-form">
+        <form action="{% url 'register event' event.slug %}" method="post" class="registration-event-form">
             {{ form.as_p }}
             {% csrf_token %}
 
