@@ -10,7 +10,7 @@ class LocationAdmin(admin.ModelAdmin):
 
     ordering = ['pk']
 
-    fieldsets = (description
+    fieldsets = (
         (
             'Location info',
             {
