@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-    <h1>NO Page found</h1>
+    <div id="body">
+        <div class="center-content">
+            <img src="{% static 'images/404.jpg' %}" alt="#">
+        </div>
+    </div>
 {% endblock %}
