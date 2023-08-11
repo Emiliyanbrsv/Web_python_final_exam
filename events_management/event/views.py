@@ -8,6 +8,7 @@ from django.views import generic as views
 
 from events_management.event.forms import EventCreateForm, EventRegistrationForm, EventEditForm
 from events_management.event.models import Event, EventViews, EventRegistration
+from events_management.utils.utils import send_sms
 
 
 # event_views
@@ -15,7 +16,7 @@ class NormalUserMixin(UserPassesTestMixin):
     login_url = reverse_lazy('login_user')
 
     def test_func(self):
-        return self.request.user.is_authenticated and self.request.user.profile_type == 'normal user'
+        return self.request.user.is_authenticated and self.request.user.profile_type == 'normal'
 
 
 class OrganizerRequiredMixin(UserPassesTestMixin):
@@ -122,7 +123,7 @@ class EventEditView(LoginRequiredMixin, OrganizerRequiredMixin, views.UpdateView
         return reverse('details event', kwargs={'slug': slug})
 
 
-class RegisterEventView(LoginRequiredMixin, views.CreateView):
+class RegisterEventView(LoginRequiredMixin, NormalUserMixin, views.CreateView):
     template_name = 'event/event_register.html'
     form_class = EventRegistrationForm
     model = EventRegistration
@@ -143,25 +144,26 @@ class RegisterEventView(LoginRequiredMixin, views.CreateView):
         context['event'] = event
         return context
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        form.instance.event = self.get_context_data()['event']
-
-        return super().form_valid(form)
-
+    #
     # def form_valid(self, form):
     #     form.instance.user = self.request.user
-    #     event = self.get_context_data()['event']
-    #     form.instance.event = event
+    #     form.instance.event = self.get_context_data()['event']
     #
-    #     response = super().form_valid(form)
-    #
-    #     phone_number = f'+{self.request.user.profile.phone_number}'
-    #     message = f"Thank you for registering for {event.name}.Have a nice day {self.request.user.profile.first_name}!"
-    #
-    #     send_sms(phone_number, message)
-    #
-    #     return response
+    #     return super().form_valid(form)
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        event = self.get_context_data()['event']
+        form.instance.event = event
+
+        response = super().form_valid(form)
+
+        phone_number = f'+{self.request.user.profile.phone_number}'
+        message = f"Thank you for attending {event.name}. Have a nice day {self.request.user.profile.first_name}!"
+
+        send_sms(phone_number, message)
+
+        return response
 
 
 class UnregisterEventView(LoginRequiredMixin, NormalUserMixin, views.View):

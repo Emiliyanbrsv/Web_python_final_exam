@@ -14,7 +14,7 @@
                 <p>Gender: {{ profile.gender }}</p>
 
                 {% if profile.phone_number %}
-                    <p>Phone number: {{ profile.phone_number }}</p>
+                    <p>Phone number: +{{ profile.phone_number }}</p>
                 {% endif %}
 
                 <p>Profile Image:</p>
@@ -33,11 +33,11 @@
             {% elif request.user.profile_type == 'organizer' %}
                 <h1>{{ organizer.name }}</h1>
                 <p>Description: {{ organizer.description }}</p>
-                <p>Phone number: {{ organizer.phone_number }}</p>
+                <p>Phone number: +{{ organizer.phone_number }}</p>
                 {% if organizer.website %}
-                    <p>{{ organizer.website }}</p>
+                    <p>Website: {{ organizer.website }}</p>
                 {% else %}
-                    <p>Company without website</p>
+                    <p>Website: No website available</p>
                 {% endif %}
                 {% if organizer.logo %}
                     <div class="profile-image">

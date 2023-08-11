@@ -9,8 +9,10 @@
                     <div>
                         <h3><a href="{% url 'details event' event.slug %}">{{ event.name }}</a></h3>
                         <p>
-                            {{ event.description }}
+                            <b>Description: </b>{{ event.description }}
                         </p>
+                        <p><b>Start time: </b>{{ event.start_date_time }}</p>
+                        <p><b>End time: </b>{{ event.end_date_time }}</p>
                     </div>
 
                     <a href="{% url 'details event' event.slug %}">

@@ -37,3 +37,26 @@ class OrganizerProfileEditForm(forms.ModelForm):
     class Meta:
         model = Organizer
         exclude = ['user']
+
+        widgets = {
+            'name': forms.TextInput(
+                attrs={
+                    'placeholder': 'Name'
+                },
+            ),
+            'description': forms.Textarea(
+                attrs={
+                    'placeholder': 'Description'
+                },
+            ),
+            'website': forms.URLInput(
+                attrs={
+                    'placeholder': 'Website'
+                },
+            ),
+            'phone_number': forms.TextInput(
+                attrs={
+                    'placeholder': 'Phone number'
+                },
+            ),
+        }

@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from django.views import generic as views
 
@@ -49,7 +49,8 @@ class LogoutUserView(LoginRequiredMixin, auth_views.LogoutView):
 
 class ChangePasswordView(LoginRequiredMixin, auth_views.PasswordChangeView):
     template_name = 'app_auth/change_password.html'
+    success_url = reverse_lazy('logout_user')
 
-    def get_success_url(self):
-        pk = self.request.user.pk
-        return reverse('profile_details', kwargs={'pk': pk})
+    # def get_success_url(self):
+    #     pk = self.request.user.pk
+    #     return reverse('profile_details', kwargs={'pk': pk})

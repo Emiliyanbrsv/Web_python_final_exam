@@ -6,7 +6,8 @@ from django.dispatch import receiver
 
 from events_management.user_profile.validators import check_if_date_is_future
 from events_management.utils.utils import Gender
-from events_management.user_profile.validators import validate_name_start_with_capital_letter, validate_name_is_only_letters, \
+from events_management.user_profile.validators import validate_name_start_with_capital_letter, \
+    validate_name_is_only_letters, \
     validate_phone_number, validate_file_less_than_5mb
 
 # user_profile
@@ -49,7 +50,7 @@ class Profile(models.Model):
     )
 
     phone_number = models.CharField(
-        max_length=12,
+        max_length=13,
         validators=(
             MinLengthValidator(5),
             validate_phone_number,
@@ -91,7 +92,6 @@ class Organizer(models.Model):
         max_length=__MAX_LEN_NAME,
         validators=(
             MinLengthValidator(__MIN_LEN_NAME),
-            validate_name_start_with_capital_letter,
         ),
         null=False,
         blank=False,
@@ -116,7 +116,7 @@ class Organizer(models.Model):
     )
 
     phone_number = models.CharField(
-        max_length=12,
+        max_length=13,
         validators=(
             MinLengthValidator(5),
             validate_phone_number,

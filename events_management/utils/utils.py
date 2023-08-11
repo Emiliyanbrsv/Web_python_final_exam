@@ -1,13 +1,5 @@
 from enum import Enum
-
-import phonenumbers
-from django.urls import reverse_lazy
-from phonenumbers import carrier, timezone, geocoder
-from phonenumbers.phonenumberutil import number_type
-
 from django.conf import settings
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.db.models import Sum
 from twilio.rest import Client
 
 
@@ -18,18 +10,18 @@ def megabytes_to_bytes(mb):
     return mb * 1024 * 1024
 
 
-# def send_sms(phone_number, message):
-#     account_sid = settings.TWILIO_ACCOUNT_SID
-#     auth_token = settings.TWILIO_AUTH_TOKEN
-#     twilio_phone_number = settings.TWILIO_PHONE_NUMBER
-#
-#     client = Client(account_sid, auth_token)
-#     message = client.messages.create(
-#         body=message,
-#         from_=twilio_phone_number,
-#         to=phone_number
-#     )
-#     return message
+def send_sms(phone_number, message):
+    account_sid = settings.TWILIO_ACCOUNT_SID
+    auth_token = settings.TWILIO_AUTH_TOKEN
+    twilio_phone_number = settings.TWILIO_PHONE_NUMBER
+
+    client = Client(account_sid, auth_token)
+    message = client.messages.create(
+        body=message,
+        from_=twilio_phone_number,
+        to=phone_number
+    )
+    return message
 
 
 class ChoicesMixin:
