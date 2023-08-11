@@ -144,26 +144,26 @@ class RegisterEventView(LoginRequiredMixin, NormalUserMixin, views.CreateView):
         context['event'] = event
         return context
 
-    #
-    # def form_valid(self, form):
-    #     form.instance.user = self.request.user
-    #     form.instance.event = self.get_context_data()['event']
-    #
-    #     return super().form_valid(form)
-
+    
     def form_valid(self, form):
         form.instance.user = self.request.user
-        event = self.get_context_data()['event']
-        form.instance.event = event
+        form.instance.event = self.get_context_data()['event']
+    
+        return super().form_valid(form)
 
-        response = super().form_valid(form)
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user
+    #     event = self.get_context_data()['event']
+    #     form.instance.event = event
 
-        phone_number = f'+{self.request.user.profile.phone_number}'
-        message = f"Thank you for attending {event.name}. Have a nice day {self.request.user.profile.first_name}!"
+    #     response = super().form_valid(form)
 
-        send_sms(phone_number, message)
+    #     phone_number = f'+{self.request.user.profile.phone_number}'
+    #     message = f"Thank you for attending {event.name}. Have a nice day {self.request.user.profile.first_name}!"
 
-        return response
+    #     send_sms(phone_number, message)
+
+    #     return response
 
 
 class UnregisterEventView(LoginRequiredMixin, NormalUserMixin, views.View):
