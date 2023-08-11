@@ -1,1 +1,1 @@
-# Web_python_final_exam
+# Event Management System
