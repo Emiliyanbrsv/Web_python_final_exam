@@ -59,5 +59,19 @@ The Event Management System aims to simplify event planning, event attendance, a
 
 ## Usage
 
-Show examples of how to use your project. Include code snippets, screenshots, or anything else that helps users understand its usage.
+- Index:
+![img.png](example_photos/example_2.png)
+
+- Register Page:
+![img.png](example_photos/example_1.png)
+
+- Dashboard:
+![img.png](example_photos/example_3.png)
+
+- Event Details:
+![img.png](example_photos/example_4.png)
+
+- Event Creation
+- ![img.png](example_photos/example_5.png)
+
 
