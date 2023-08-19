@@ -60,7 +60,7 @@ The Event Management System aims to simplify event planning, event attendance, a
 ## Usage
 
 - Index:
-![img.png](example_photos/example_2.png)
+![img.png](example_photos/example_6.png)
 
 - Register Page:
 ![img.png](example_photos/example_6.png)
